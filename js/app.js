@@ -6,23 +6,27 @@
  let cards= [];
  function initializeDeck () {
    for (i=1; i<=16; i++) {
-    cards.push($('li:nth-child(' + i + ')'));
+    cards.push($('.deck li:nth-child(' + i + ')'));
   }
 }
 
 initializeDeck();
 shuffle(cards);
-clearDeck();
 
-function clearDeck() {
-  deck.find('*').remove();
-}
 
 function addEachCardToHtml() {
   for (i=0; i<cards.length; i++)
   cards[i].appendTo(deck);
 }
 addEachCardToHtml();
+
+let restart = $('.restart');
+function funRestart() {
+  $('.deck .card').removeClass('open show match');
+}
+restart.on('click', funRestart);
+
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -45,6 +49,11 @@ function shuffle(array) {
     return array;
 }
 
+function display () {
+  $('.deck .card').addClass('open show');
+}
+
+deck.on('click', display);
 
 /*
  * set up the event listener for a card. If a card is clicked:
