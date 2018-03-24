@@ -6,6 +6,7 @@
  let deck = $('.deck');
  let cards= [];
  let listOfOpenCards = [];
+ let count = 0;
 
  function initializeDeck () {
    for (i=1; i<=16; i++) {
@@ -54,41 +55,39 @@ function shuffle(array) {
 }
 
 function display () {
+  if ($(this).hasClass('open show')){
+    return;
+  } else {
   $(this).addClass('open show');
   listOfOpenCards.push($(this));
   comparison($(this));
 }
+}
 
 deck.on('click', 'li', display);
 
-
-// function openCards () {
-//   // czy potrzebuje iteratora
-//  listOfOpenCards.push($('.open .show'));
-// }
-
-// openCards();
-
-// function sleep(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
+function wrongMatch (){
+  listOfOpenCards[0].removeClass('open show');
+  listOfOpenCards[1].removeClass('open show');
+  listOfOpenCards = [];
+  deck.on( "click", 'li', display);
+}
 
 function comparison (element) {
-
-
   if (listOfOpenCards.length > 1) {
     let className2 = element.children().attr('class').split(' ')[1];
     let className1 = listOfOpenCards[0].children().attr('class').split(' ')[1];
-    if (className2 === className1 && element !==listOfOpenCards[0]) {
+    if (className2 === className1) {
       listOfOpenCards[0].removeClass('open show').addClass('match');
       listOfOpenCards[1].removeClass('open show').addClass('match');
       listOfOpenCards = [];
+      count = count + 1;
+
     } else {
         // await sleep(400);
-      listOfOpenCards[0].removeClass('open show');
-      listOfOpenCards[1].removeClass('open show');
+        deck.off( "click", 'li', display);
+      setTimeout(wrongMatch, 1000);
 
-      listOfOpenCards = [];
     }
   }
 }
