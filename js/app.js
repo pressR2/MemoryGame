@@ -6,7 +6,8 @@
  let deck = $('.deck');
  let cards= [];
  let listOfOpenCards = [];
- let count = 0;
+ let countMatchPairCards = 0;
+ let 
 
  function initializeDeck () {
    for (i=1; i<=16; i++) {
@@ -81,12 +82,15 @@ function comparison (element) {
       listOfOpenCards[0].removeClass('open show').addClass('match');
       listOfOpenCards[1].removeClass('open show').addClass('match');
       listOfOpenCards = [];
-      count = count + 1;
+      countMatchPairCards = countMatchPairCards + 1;
+      if (count === 8) {
+      $('.container').remove();
+
+      }
 
     } else {
-        // await sleep(400);
         deck.off( "click", 'li', display);
-      setTimeout(wrongMatch, 1000);
+        setTimeout(wrongMatch, 1000);
 
     }
   }
