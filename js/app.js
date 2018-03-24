@@ -55,7 +55,7 @@ function shuffle(array) {
 
 function display () {
   $(this).addClass('open show');
-  listOfOpenCards.push($('.open .show'));
+  listOfOpenCards.push($(this));
   comparison($(this));
 }
 
@@ -69,16 +69,30 @@ deck.on('click', 'li', display);
 
 // openCards();
 
+// function sleep(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
+
 function comparison (element) {
+
+
   if (listOfOpenCards.length > 1) {
     let className2 = element.children().attr('class').split(' ')[1];
-    let className1 = $('listOfOpenCards[0]').children().attr('class').split(' ')[1];
-    if className2 === className1 {
-      className1
+    let className1 = listOfOpenCards[0].children().attr('class').split(' ')[1];
+    if (className2 === className1 && element !==listOfOpenCards[0]) {
+      listOfOpenCards[0].removeClass('open show').addClass('match');
+      listOfOpenCards[1].removeClass('open show').addClass('match');
+      listOfOpenCards = [];
+    } else {
+        // await sleep(400);
+      listOfOpenCards[0].removeClass('open show');
+      listOfOpenCards[1].removeClass('open show');
+
+      listOfOpenCards = [];
     }
   }
 }
-// comparison();
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
