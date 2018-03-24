@@ -2,8 +2,11 @@
  * Create a list that holds all of your cards
 
  */
+  $('.deck .card').removeClass('open show match');
  let deck = $('.deck');
  let cards= [];
+
+
  function initializeDeck () {
    for (i=1; i<=16; i++) {
     cards.push($('.deck li:nth-child(' + i + ')'));
@@ -13,17 +16,18 @@
 initializeDeck();
 shuffle(cards);
 
-
 function addEachCardToHtml() {
   for (i=0; i<cards.length; i++)
   cards[i].appendTo(deck);
 }
+
 addEachCardToHtml();
 
 let restart = $('.restart');
 function funRestart() {
   $('.deck .card').removeClass('open show match');
 }
+
 restart.on('click', funRestart);
 
 
@@ -50,11 +54,24 @@ function shuffle(array) {
 }
 
 function display () {
-  $('.deck .card').addClass('open show');
+  $(this).addClass('open show');
 }
 
-deck.on('click', display);
+deck.on('click', 'li', display);
 
+let listOfOpenCards = [];
+function openCards () {
+  // czy potrzebuje iteratora
+ listOfOpenCards.push($('.open .show'));
+}
+
+openCards();
+
+function comparison () {
+  if (listOfOpenCards.length > 0) {
+
+  }
+}
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
