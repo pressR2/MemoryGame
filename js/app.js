@@ -1,13 +1,19 @@
-/*
- * Create a list that holds all of your cards
 
- */
-  funRestart();
+
  let deck = $('.deck');
  let cards= [];
  let listOfOpenCards = [];
  let countMatchPairCards = 0;
- let 
+ let countMove = 0;
+ let moves = $('.moves');
+ let mainGameView = $('.container');
+ let afterWinningInfo = $(`<div>
+   <h1 class="winInfo">Congratulations!</h1>
+   <p>BlaBlaBLaBlaBLa</p>
+   <button type= "submit" class="button">Play again?</button>
+   </div>`);
+
+  funRestart();
 
  function initializeDeck () {
    for (i=1; i<=16; i++) {
@@ -28,17 +34,13 @@ addEachCardToHtml();
 let restart = $('.restart');
 function funRestart() {
   $('.deck .card').removeClass('open show match');
+  countMove = 0;
+  moves.html(countMove);
+  $('.stars li:nth-child(1)').show();
+  $('.stars li:nth-child(2)').show();
 }
 
 restart.on('click', funRestart);
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -55,10 +57,25 @@ function shuffle(array) {
     return array;
 }
 
+function moveCounter () {
+    countMove = countMove + 1;
+    moves.html(countMove);
+    starRating();
+  }
+
+function starRating () {
+  if (countMove > 22 && countMove <=32) {
+    $('.stars li:nth-child(1)').hide();
+  } else if (countMove > 32) {
+    $('.stars li:nth-child(2)').hide();
+  }
+}
+
 function display () {
-  if ($(this).hasClass('open show')){
+  if ($(this).hasClass('open show') || $(this).hasClass('match')) {
     return;
   } else {
+  moveCounter();
   $(this).addClass('open show');
   listOfOpenCards.push($(this));
   comparison($(this));
@@ -74,6 +91,20 @@ function wrongMatch (){
   deck.on( "click", 'li', display);
 }
 
+function continueGame () {
+mainGameView.appendTo('body');
+afterWinningInfo.remove();
+funRestart ();
+deck.on('click', 'li', display);
+}
+
+function afterWinning () {
+  countMatchPairCards = 0;
+  mainGameView.remove();
+  afterWinningInfo.appendTo('body');
+    $('button').on('click', continueGame);
+    }
+
 function comparison (element) {
   if (listOfOpenCards.length > 1) {
     let className2 = element.children().attr('class').split(' ')[1];
@@ -83,9 +114,9 @@ function comparison (element) {
       listOfOpenCards[1].removeClass('open show').addClass('match');
       listOfOpenCards = [];
       countMatchPairCards = countMatchPairCards + 1;
-      if (count === 8) {
-      $('.container').remove();
-
+      if (countMatchPairCards === 8) {
+        afterWinning ();
+      // // $('<li class="card show"><i class="fa-trophy-alt"></i></li>').appendTo('body');
       }
 
     } else {
@@ -95,6 +126,8 @@ function comparison (element) {
     }
   }
 }
+
+// window.location.reload(true);
 
 /*
  * set up the event listener for a card. If a card is clicked:

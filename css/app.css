@@ -107,3 +107,18 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.winInfo {
+  text-align: center;
+  font-size: 45px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 20px;
+  text-align: center;
+}
+
+.button {
+  text-align: center;
+}
