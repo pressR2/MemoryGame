@@ -6,11 +6,12 @@
  let countMatchPairCards = 0;
  let countMove = 0;
  let moves = $('.moves');
+ let timeCounter = $('<div class="time">minutes + ":" + seconds</div>');
  let mainGameView = $('.container');
- let afterWinningInfo = $(`<div>
-   <h1 class="winInfo">Congratulations!</h1>
-   <p>BlaBlaBLaBlaBLa</p>
-   <button type= "submit" class="button">Play again?</button>
+ let afterWinningInfo = $(`<div class="div">
+   <h1 class="winInfo">Congratulations!You win the game</h1>
+   <p>blablablabla</p>
+   <div><button type= "submit" class="button">Play again?</button></div>
    </div>`);
 
   funRestart();
@@ -71,6 +72,12 @@ function starRating () {
   }
 }
 
+// function timer() {
+//   let minutes = 0;
+//   let seconds = 0;
+//   setTimeout(timer, 1000);
+// }
+
 function display () {
   if ($(this).hasClass('open show') || $(this).hasClass('match')) {
     return;
@@ -104,6 +111,7 @@ function afterWinning () {
   afterWinningInfo.appendTo('body');
     $('button').on('click', continueGame);
     }
+    afterWinning();
 
 function comparison (element) {
   if (listOfOpenCards.length > 1) {
@@ -115,7 +123,7 @@ function comparison (element) {
       listOfOpenCards = [];
       countMatchPairCards = countMatchPairCards + 1;
       if (countMatchPairCards === 8) {
-        afterWinning ();
+        // afterWinning ();
       // // $('<li class="card show"><i class="fa-trophy-alt"></i></li>').appendTo('body');
       }
 
