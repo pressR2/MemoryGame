@@ -6,11 +6,15 @@
  let countMatchPairCards = 0;
  let countMove = 0;
  let moves = $('.moves');
+ let startDate;
+ let endDate;
+ let timerOn = false;
+ let gameTime;
  let timeCounter = $('<div class="time">minutes + ":" + seconds</div>');
  let mainGameView = $('.container');
  let afterWinningInfo = $(`<div class="div">
    <h1 class="winInfo">Congratulations!You win the game</h1>
-   <p>blablablabla</p>
+   <p></p>
    <div><button type= "submit" class="button">Play again?</button></div>
    </div>`);
 
@@ -72,13 +76,27 @@ function starRating () {
   }
 }
 
-// function timer() {
-//   let minutes = 0;
-//   let seconds = 0;
-//   setTimeout(timer, 1000);
-// }
+function formatTimer(min, sec) {
+  let result = "";
+  if (min >= 10) {
+  result = result + min;
+} else {
+  result = "0" + min;
+}
+  if (sec >= 10) {
+    result = result + ":" + sec;
+  } else {
+    result = result + ":" + "0" + sec;
+  }
+  return result;
+}
+
 
 function display () {
+  if (timerOn === false){
+    timerOn = true;
+    startDate = new Date();
+  }
   if ($(this).hasClass('open show') || $(this).hasClass('match')) {
     return;
   } else {
@@ -107,11 +125,12 @@ deck.on('click', 'li', display);
 
 function afterWinning () {
   countMatchPairCards = 0;
+  // let p =
   mainGameView.remove();
   afterWinningInfo.appendTo('body');
     $('button').on('click', continueGame);
     }
-    afterWinning();
+    // afterWinning();
 
 function comparison (element) {
   if (listOfOpenCards.length > 1) {
@@ -123,8 +142,13 @@ function comparison (element) {
       listOfOpenCards = [];
       countMatchPairCards = countMatchPairCards + 1;
       if (countMatchPairCards === 8) {
-        // afterWinning ();
-      // // $('<li class="card show"><i class="fa-trophy-alt"></i></li>').appendTo('body');
+        afterWinning ();
+        endDate = new Date();
+        let interval = (endDate - startDate) / 1000;
+        let minutes = interval / 60;
+        let seconds = interval % 60;
+        gameTime = formatTimer(minutes, seconds);
+        console.log(gameTime);
       }
 
     } else {
