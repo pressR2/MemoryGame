@@ -13,7 +13,7 @@
  let timeCounter = $('<div class="time">minutes + ":" + seconds</div>');
  let mainGameView = $('.container');
  let afterWinningInfo = $(`<div class="div">
-   <h1 class="winInfo">Congratulations!You win the game</h1>
+   <h1 class="winInfo">Congratulations!You win the game.</h1>
    <p></p>
    <div><button type= "submit" class="button">Play again?</button></div>
    </div>`);
@@ -68,28 +68,60 @@ function moveCounter () {
     starRating();
   }
 
+let countStar;
 function starRating () {
-  if (countMove > 22 && countMove <=32) {
+  if (countMove <= 24) {
+    countStar = "3 stars: Badass flipper!";
+  }
+  else if (countMove > 24 && countMove <=32) {
     $('.stars li:nth-child(1)').hide();
-  } else if (countMove > 32) {
+    countStar = "2 stars: Solid spotter!";
+  }
+  else if (countMove > 32) {
     $('.stars li:nth-child(2)').hide();
+    countStar = "1 star: Junior clicker!";
   }
 }
 
-function formatTimer(min, sec) {
-  let result = "";
-  if (min >= 10) {
-  result = result + min;
-} else {
-  result = "0" + min;
+var c=0;
+var minutes= 0;
+var t;
+var timer_is_on=0;
+
+function timedCount()
+{
+document.getElementById('txt').value='minutes:'+ minutes + ' seconds: '+ c;
+c=c+1;
+if (c%60==0){
+minutes+=1;
+c=0;
 }
-  if (sec >= 10) {
-    result = result + ":" + sec;
-  } else {
-    result = result + ":" + "0" + sec;
+t=setTimeout("timedCount()",1000);
+}
+
+function doTimer()
+{
+if (!timer_is_on)
+  {
+  timer_is_on=1;
+  timedCount();
   }
-  return result;
 }
+
+// function formatTimer(min, sec) {
+//   let result = "";
+//   if (min >= 10) {
+//   result = result + min;
+// } else {
+//   result = "0" + min;
+// }
+//   if (sec >= 10) {
+//     result = result + ":" + sec;
+//   } else {
+//     result = result + ":" + "0" + sec;
+//   }
+//   return result;
+// }
 
 
 function display () {
@@ -125,11 +157,11 @@ deck.on('click', 'li', display);
 
 function afterWinning () {
   countMatchPairCards = 0;
-  // let p =
   mainGameView.remove();
   afterWinningInfo.appendTo('body');
-    $('button').on('click', continueGame);
-    }
+  $('p').text ("With " + countMove + " moves " + "and " + countStar);
+  $('button').on('click', continueGame);
+}
     // afterWinning();
 
 function comparison (element) {
@@ -144,11 +176,10 @@ function comparison (element) {
       if (countMatchPairCards === 8) {
         afterWinning ();
         endDate = new Date();
-        let interval = (endDate - startDate) / 1000;
-        let minutes = interval / 60;
+        let interval = Math.floor((endDate - startDate) / 1000);
+        let minutes = Math.floor(interval / 60);
         let seconds = interval % 60;
         gameTime = formatTimer(minutes, seconds);
-        console.log(gameTime);
       }
 
     } else {
