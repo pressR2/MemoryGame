@@ -6,11 +6,10 @@
  let countMatchPairCards = 0;
  let countMove = 0;
  let moves = $('.moves');
- let startDate;
- let endDate;
+ let seconds = -1;
+ let minutes = -1;
  let timerOn = false;
- let gameTime;
- let timeCounter = $('<div class="time">minutes + ":" + seconds</div>');
+ let gameTime = "00:00";
  let mainGameView = $('.container');
  let afterWinningInfo = $(`<div class="div">
    <h1 class="winInfo">Congratulations!You win the game.</h1>
@@ -38,11 +37,20 @@ addEachCardToHtml();
 
 let restart = $('.restart');
 function funRestart() {
+  shuffle(cards);
+  addEachCardToHtml();
+  listOfOpenCards = [];
+  countMatchPairCards = 0;
   $('.deck .card').removeClass('open show match');
   countMove = 0;
   moves.html(countMove);
   $('.stars li:nth-child(1)').show();
   $('.stars li:nth-child(2)').show();
+  timerOn = false;
+  gameTime = "00:00";
+  seconds = -1;
+  minutes = -1;
+  $('.timer').html(gameTime);
 }
 
 restart.on('click', funRestart);
@@ -68,66 +76,55 @@ function moveCounter () {
     starRating();
   }
 
-let countStar;
+let rating;
 function starRating () {
   if (countMove <= 24) {
-    countStar = "3 stars: Badass flipper!";
+    rating = "3 stars: Badass flipper!";
   }
   else if (countMove > 24 && countMove <=32) {
     $('.stars li:nth-child(1)').hide();
-    countStar = "2 stars: Solid spotter!";
+    rating = "2 stars: Solid spotter!";
   }
   else if (countMove > 32) {
     $('.stars li:nth-child(2)').hide();
-    countStar = "1 star: Junior clicker!";
+    rating = "1 star: Junior clicker!";
   }
 }
 
-var c=0;
-var minutes= 0;
-var t;
-var timer_is_on=0;
-
-function timedCount()
-{
-document.getElementById('txt').value='minutes:'+ minutes + ' seconds: '+ c;
-c=c+1;
-if (c%60==0){
-minutes+=1;
-c=0;
-}
-t=setTimeout("timedCount()",1000);
-}
-
-function doTimer()
-{
-if (!timer_is_on)
-  {
-  timer_is_on=1;
-  timedCount();
+function timedCount() {
+  if (timerOn === true) {
+  seconds = seconds + 1;
+  if (seconds % 60 == 0) {
+    minutes = minutes + 1;
+    seconds = 0;
   }
+  setTimeout("timedCount()",1000);
+  gameTime = formatTimer(minutes, seconds);
+  $('.timer').html(gameTime);
+}
 }
 
-// function formatTimer(min, sec) {
-//   let result = "";
-//   if (min >= 10) {
-//   result = result + min;
-// } else {
-//   result = "0" + min;
-// }
-//   if (sec >= 10) {
-//     result = result + ":" + sec;
-//   } else {
-//     result = result + ":" + "0" + sec;
-//   }
-//   return result;
-// }
+
+function formatTimer(min, sec) {
+  let result = "";
+  if (min >= 10) {
+  result = result + min;
+} else {
+  result = "0" + min;
+}
+  if (sec >= 10) {
+    result = result + ":" + sec;
+  } else {
+    result = result + ":" + "0" + sec;
+  }
+  return result;
+}
 
 
 function display () {
   if (timerOn === false){
     timerOn = true;
-    startDate = new Date();
+    timedCount();
   }
   if ($(this).hasClass('open show') || $(this).hasClass('match')) {
     return;
@@ -141,9 +138,11 @@ function display () {
 
 deck.on('click', 'li', display);
 
-function wrongMatch (){
+function wrongMatch () {
+  if (listOfOpenCards.length > 1) {  // restart czysci tablice, a funkcja z poprzedniej gry dziala z opoznienien, wiec upewnijmy sie ze sa elementy w tablicy zanim sie do nicg odwolamy//
   listOfOpenCards[0].removeClass('open show');
   listOfOpenCards[1].removeClass('open show');
+}
   listOfOpenCards = [];
   deck.on( "click", 'li', display);
 }
@@ -159,7 +158,7 @@ function afterWinning () {
   countMatchPairCards = 0;
   mainGameView.remove();
   afterWinningInfo.appendTo('body');
-  $('p').text ("With " + countMove + " moves " + "and " + countStar);
+  $('p').text ("With " + countMove + " moves " + "and " + rating + ". " + "Your time was: " + gameTime);
   $('button').on('click', continueGame);
 }
     // afterWinning();
@@ -175,11 +174,7 @@ function comparison (element) {
       countMatchPairCards = countMatchPairCards + 1;
       if (countMatchPairCards === 8) {
         afterWinning ();
-        endDate = new Date();
-        let interval = Math.floor((endDate - startDate) / 1000);
-        let minutes = Math.floor(interval / 60);
-        let seconds = interval % 60;
-        gameTime = formatTimer(minutes, seconds);
+
       }
 
     } else {
@@ -190,7 +185,6 @@ function comparison (element) {
   }
 }
 
-// window.location.reload(true);
 
 /*
  * set up the event listener for a card. If a card is clicked:
