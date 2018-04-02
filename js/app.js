@@ -22,7 +22,8 @@ const afterWinningInfo = $(`<div class="win-info">
    </div>`);
 
 preparationGame();
-// zawiera funkcje uruchamiane na poczatku, po zaladowaniu strony z gra.
+
+// wrapping first game setup
 function preparationGame() {
   restartGame();
   initializeDeck();
@@ -32,35 +33,42 @@ function preparationGame() {
   deck.on('click', 'li', handleClick);
 }
 
-// uzupełnia tablice cards kolejnymi dziecmi elementu html-owego <ul>.Kolejne dziecko <ul> dodaje na koniec tablicy cards
+// get the cards elements into an array
 function initializeDeck() {
   for (i = 1; i <= 16; i++) {
-    cards.push($('.deck li:nth-child(' + i + ')')); //<-- dwa stringi, pomiedzy nimi iterator. !!!
+    cards.push($('.deck li:nth-child(' + i + ')'));
   }
 }
 
-// elementy tablicy cards zostaną przeniesione do celu - deck (html <ul>). Nie będą one sklonowane stąd 16 a nie 32 elementy, tylko zostanie zwrócony nowy zestaw <ul> składający się z kolejnych elementów tablicy cards
+// replace the order of cards in DOM with order in the array of cards
 function addEachCardToHtml() {
   for (i = 0; i < cards.length; i++)
     cards[i].appendTo(deck);
 }
 
-// funkcja ta, losowo ustawia karty w tablicy cards, dodaje je do html-a. Tablice listOfOpenCards ustawia na pustą, by zakonczyc działanie funkcji wrongMatch, która uruchamia się po 1 sek.(kiedy ona sie wykonuje w tablicy sa 2 elementy, funkcja restartGame czysci tablice !!nie kumam zapytac!! i chyba automatycznie przerywa działanie funkcji wrongMatch).Przypiasanie zmiennej countMatchPairCards wartosci zero zapobiega ukonczeniu gry z mniejsza iloscia dopasowanych kart. w poprzedniej dopasowalam 3 pary, wciskam restart button i nową gre ukoncze po dopasowaniu 4 par.
+// shuffle and display cards
+// set initial values to prevent errors
 function restartGame() {
   shuffle(cards);
   addEachCardToHtml();
   listOfOpenCards = [];
   countMatchPairCards = 0;
-  $('.deck .card').removeClass('open show match'); // <-- odwraca karty symbolem w dół
-  countMove = 0; //<-- ustawia countMove na zero
-  moves.text(countMove + MOVES_TEXT); //<-- przekazuje wartość countMove w tym przypadku 0 do html-a, po restarcie widzimy tam zero
-  $('.stars li:nth-child(1)').show(); //<--pokazuje/ustawia wczesniej zakryte gwiazdki
-  $('.stars li:nth-child(2)').show(); //<--
-  timerOn = false; //<--  w funkcji handleClick ustawiono te zmienna na true i czas dalej biegnie ale od zero bo tu ustawiam go na zero
-  gameTime = TIME_TEXT + '00:00'; // <-- przypisanie/ zerowanie timera (tego nie widzisz na stronie)
+
+  // flip cards face down
+  $('.deck .card').removeClass('open show match');
+  countMove = 0;
+  moves.text(countMove + MOVES_TEXT);
+
+  //show hidden stars
+  $('.stars li:nth-child(1)').show();
+  $('.stars li:nth-child(2)').show();
+
+  // stop timer
+  timerOn = false;
+  gameTime = TIME_TEXT + '00:00';
   seconds = -1;
   minutes = -1;
-  timer.text(gameTime); //<--przekazanie tego zerowego timera do html-a(dopiero teraz widzisz 00:00 na stronie)
+  timer.text(gameTime);
   clearTimeout(timerTimeOut);
 }
 
@@ -80,14 +88,15 @@ function shuffle(array) {
   return array;
 }
 
-// funkcja uruchamiana przy kazdym kliknięciu na pole na planszy gry. Najpierw sprawdzany jest warunek logiczny: czy timer jest fałszem. jesli prawda to ustaw timer na prawde i uruchom funkcje timedCount naliczajaca czas. Służy to temu żeby wystartowac timer tylk raz, jezeli kolejny warunek jest prawda ( ten klikniety element posiada klase odkrywajaca symbol i ustawiającą element odkryty lub element ten posiada klase dopasowujaca element) to wtedy nic nie robi. w przeciwnym wypadku uruchamiana jest funkcja moveCounter, kliknietemu elementowi nadana zostaje klasa (open i show / symbol karty zostaje odkryty), zostaje dodany do tablicy listOfOpenCards oraz uruchamiana zostaje funkcja porownujaca ten element.( czy ta funkcja nie powinna byc moveCounter. uruchamiana gdy countMove = 2??)
 function handleClick() {
+  //First click starts timer
   if (timerOn === false) {
     timerOn = true;
     timedCount();
   }
 
-  if ($(this).hasClass('open show') || $(this).hasClass('match')) { //<-- zabobiega naliczaniu ruchow poprzez klikniecie na ten sam element
+  // prevent counting moves when clicking on the same element
+  if ($(this).hasClass('open show') || $(this).hasClass('match')) {
     return;
   } else {
     moveCounter();
@@ -97,14 +106,14 @@ function handleClick() {
   }
 }
 
-// funkcja uruchamiana po kliknieciu na polu gry. Licznik countMove z wartosci 0 zwiekszyl sie o ten jeden klik(kazdy kolejny wiadomo). wartosc tej zmiennej zostaje przekazana do elementu moves html i uruchomiana zostaje finkcja starRating tez po kliku pierwszym. musi tu byc bo to jak sie zachowuje/co zwraca zalezy od ilosci wykonanych ruchow
+// update and display move count, update star rating
 function moveCounter() {
   countMove += 1;
   moves.text(countMove + MOVES_TEXT);
   starRating();
 }
 
-// funkcja  w zależności od spełnienia podanych przypadkow, które to definiują ilości wykonanych kliknięć, zwraca zmienna rating z konkretnym stringiem oraz ukrywa lub nie element html- ikone gwiazdki.
+// update star rating and display it, set the winning text
 function starRating() {
   if (countMove <= 24) {
     rating = '3 Stars and the title "Badass flipper!"';
@@ -117,7 +126,7 @@ function starRating() {
   }
 }
 
-// funkcja sprawdza warunek logiczny. jezeli zmienna timerOn jest prawda(a jest bo w funckcji handleClick zostala ustawiona na true) to nalicza sekundy. i jesli reszta z dzielania sumy sekund wynosi 0 to wtedy minuty zaczynaja sie liczyc a sekundy ustawiane sa na 0.( sytuacja startowa 00:00, po kilku sekundach 00:15, warunek( 00:59 --> + 1 sek 01:00,  dalej bedzie 01:01)) i uruchamia funkcje z 1 sekundowym opoznieniem (dlatego na poczatku seconds i minutes = -1 chyba!!), updatuje zmienna gameTime (ktora na biezaco formatuje czas) i ustawia elementowi html-owemu te zmienna.
+//count time and call itself after one second
 //Time count funkcjon from here https://stackoverflow.com/questions/6623516/jquery-time-counter
 function timedCount() {
   seconds += 1;
@@ -126,31 +135,34 @@ function timedCount() {
     seconds = 0;
   }
   timerTimeOut = setTimeout(timedCount, 1000);
-  gameTime = TIME_TEXT + formatTimer(minutes, seconds); //<-- moge sie tego pozbyc i te zmienna zamienic funkcja z argumentami
-  timer.text(gameTime); // wprowadz zmienna do .timer
+  gameTime = TIME_TEXT + formatTimer(minutes, seconds);
+  timer.text(gameTime);
 }
 
+// format time to 00:00
 function formatTimer(min, sec) {
   let result = '';
   if (min >= 10) {
-    result += min; // <--10
+    result += min;
   } else {
-    result = '0' + min; //<--05
+    result = '0' + min;
   }
 
-  result += ':'; //05:
+  result += ':';
 
   if (sec >= 10) {
-    result += sec; //<--10:10
+    result += sec;
   } else {
-    result = result + '0' + sec; //<--05:02
+    result = result + '0' + sec;
   }
   return result;
 }
 
-function comparison() { //<-- w handleClick mamy ten konkretny klikniety element $(this)
+//contains matching logic and game winning condition
+function comparison() {
   if (listOfOpenCards.length > 1) {
-    let className1 = listOfOpenCards[0].children().attr('class').split(' ')[1]; //<-- split dzieli obiekt string na TABLICE stringow uzywajac separatora spacji (' ') aby okreslic gdzie dokonac podzialu.[1] to drugi element tablicy w tym przypadku 2 klasa elementu.
+    //get elemet's second class
+    let className1 = listOfOpenCards[0].children().attr('class').split(' ')[1];
     let className2 = listOfOpenCards[1].children().attr('class').split(' ')[1];
 
     if (className1 === className2) {
@@ -164,15 +176,17 @@ function comparison() { //<-- w handleClick mamy ten konkretny klikniety element
       }
 
     } else {
-      deck.off('click', 'li', handleClick); //<-- zeby nie odkrywac kolejnych kart gdy dwie niezmaczowane wyświetlaja sie przez te 1 sekunde
+      // prevent uncovering other cards when non matched cards are showing
+      deck.off('click', 'li', handleClick);
       setTimeout(wrongMatch, 1000);
     }
   }
 }
 
-// jezeli  warunek jest spelniony to zakrywa symbole kart
+// flip the cards face down on wrong match
 function wrongMatch() {
-  if (listOfOpenCards.length > 1) { // restart czysci tablice, a funkcja ta z poprzedniej gry dziala z opoznienien, wiec upewnijmy sie ze sa elementy w tablicy zanim sie do nich odwolamy//
+  //prevent error when restart is clicked shortly after wrong match
+  if (listOfOpenCards.length > 1) {
     listOfOpenCards[0].removeClass('open show');
     listOfOpenCards[1].removeClass('open show');
   }
@@ -180,32 +194,20 @@ function wrongMatch() {
   deck.on('click', 'li', handleClick);
 }
 
+//show win info
 function afterWinning() {
   mainGameView.remove();
   afterWinningInfo.appendTo('body');
   $('p').text('With ' + countMove + MOVES_TEXT + ' and ' + rating + ' ' + gameTime);
   $('button').on('click', continueGame);
 }
-// afterWinning();
 
+//start another game after winning
 function continueGame() {
   mainGameView.appendTo('body');
   afterWinningInfo.remove();
   restartGame();
-  deck.on('click', 'li', handleClick); //<-- usuwam elementy z DOM co powoduje odpiecie eventow
-  restart.on('click', restartGame); //<--  jak wyżej
+  //assign events one more time, because removing elements from DOM clears the assignments
+  deck.on('click', 'li', handleClick);
+  restart.on('click', restartGame);
 }
-
-
-
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, handleClick a message with the final score (put this functionality in another function that you call from this one)
- */

@@ -1,4 +1,4 @@
-# Memory Game Project
+# Memory Game
 
 ## About the game
 
@@ -15,3 +15,5 @@
   * The player can reset the game by clicking the loop arrow symbol. The cards will covered and shuffled, the move counter and timer will be reset to zero.
 
 ## Link to game
+
+* [http://pressR2.github.io](http://pressR2.github.io)
