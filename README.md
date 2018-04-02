@@ -1,20 +1,17 @@
 # Memory Game Project
 
-## Table of Contents
+## About the game
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+* There are 16 cards, 8 different pairs of pictures on the game board. At  the start of the game the cards are covered and placed randomly, the goal of player is to uncover them all.
 
 ## Instructions
+* Player flips the card by clicking on them. Only two cards are uncovered at the same time. If the cards match they stay uncovered, if they don't the player have one seconds to remember them, after that the pictures are hidden again.
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+* Depending of number of moves it took the player to finish the game he's rewarded with a star rating and a title.
+  - less than 25 moves - 3 Stars and the title "Badass flipper!"
+  - less than 33 moves - 2 Stars and the title "Solid spotter!"
+  - 33 and more moves - 1 Star and the title "Junior clicker!"
 
-To get started, open `js/app.js` and start building out the app's functionality
+  * The player can reset the game by clicking the loop arrow symbol. The cards will covered and shuffled, the move counter and timer will be reset to zero.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Link to game
