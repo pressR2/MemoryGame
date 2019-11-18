@@ -2,7 +2,7 @@
 
 ## About the game
 
-* There are 16 cards, 8 different pairs of pictures on the game board. At  the start of the game the cards are covered and placed randomly, the goal of player is to uncover them all.
+* There are 16 cards, 8 different pairs of pictures on the game board. At the start of the game the cards are covered and placed randomly, the goal of player is to uncover them all.
 
 ## Instructions
 * Player flips the card by clicking on them. Only two cards are uncovered at the same time. If the cards match they stay uncovered, if they don't the player have one seconds to remember them, after that the pictures are hidden again.
@@ -14,6 +14,8 @@
 
   * The player can reset the game by clicking the loop arrow symbol. The cards will covered and shuffled, the move counter and timer will be reset to zero.
 
+## Source
+Initial code by Udacity [link](https://github.com/udacity/fend-project-memory-game).
 ## Link to game
 
 * [http://pressR2.github.io](http://pressR2.github.io)

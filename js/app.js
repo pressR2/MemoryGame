@@ -127,7 +127,7 @@ function starRating() {
 }
 
 //count time and call itself after one second
-//Time count funkcjon from here https://stackoverflow.com/questions/6623516/jquery-time-counter
+//Time count fuction from here https://stackoverflow.com/questions/6623516/jquery-time-counter
 function timedCount() {
   seconds += 1;
   if (seconds % 60 == 0) {
