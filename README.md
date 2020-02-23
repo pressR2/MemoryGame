@@ -1,5 +1,5 @@
 # Memory Game
-
+![my screenshot](img/Untitled5.PNG "Game screen")
 ## About the game
 
 * There are 16 cards, 8 different pairs of pictures on the game board. At the start of the game, the cards are covered and placed randomly, the goal of the player is to uncover them all.
