@@ -15,4 +15,4 @@
 Initial code by Udacity [link](https://github.com/udacity/fend-project-memory-game).
 ## Link to game
 
-* [http://pressR2.github.io](http://pressR2.github.io)
+* [https://pressr2.github.io/memory_game/](https://pressr2.github.io/memory_game/)
