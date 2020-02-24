@@ -5,7 +5,7 @@
 * There are 16 cards, 8 different pairs of pictures on the game board. At the start of the game, the cards are covered and placed randomly, the goal of the player is to uncover them all.
 
 ## Instructions
-* Player flips the card by clicking on them. Only two cards are uncovered at the same time. If the cards match they stay uncovered if they don't the player has one second to remember them, after that the pictures are hidden again.
+* The player flips the card by clicking on them. Only two cards are uncovered at the same time. If the cards match they stay uncovered if they don't the player has one second to remember them, after that the pictures are hidden again.
 
 * Depending on the number of moves it took the player to finish the game he's rewarded with a star rating and a title.
 
