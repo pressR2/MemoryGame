@@ -107,9 +107,10 @@ h1 {
 }
 
 .score-panel .restart {
-    margin-left: 80px;
+    margin-left: 35px;
     cursor: pointer;
     margin-top: 4px;
+    width: 45px;
 }
 
 .score-panel .timer {
